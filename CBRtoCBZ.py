@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # CBR to CBZ converter
 # Pass an individual CBR file or a directory containing CBRs
-#
+# MUST HAVE RARFILE MODULE - sudo easy_install rarfile
 # It is a hodgepodge but it works...
 
 import os
@@ -40,15 +40,20 @@ def main():
 
 def UnrarCBR( cbrin, cbrout ):
     '''function to unrar the cbr files'''
-    rf = rarfile.RarFile( cbrin )
-    # unrar the cbr into fullpath sans extension
-    rf.extractall( cbrout )
-    rf.close()
-    # delete the cbr file
-    os.unlink( cbrin )
-    # pass the comic full path sans extension to the CreateCBZ function
-    CreateCBZ( cbrout )
-
+    # Using TRY since not all CBRs are actually RARs!
+    # Should do something more intelligent than just renaming to ZIP
+    try:
+        rf = rarfile.RarFile( cbrin )
+        # unrar the cbr into fullpath sans extension
+        rf.extractall( cbrout )
+        rf.close()
+        # delete the cbr file
+        os.unlink( cbrin )
+        # pass the comic full path sans extension to the CreateCBZ function
+        CreateCBZ( cbrout )
+    except:
+        print 'Renamed: ' + cbrout + '.cbr' + ' =>' + cbrout +'.cbz'
+        shutil.move( cbrin, cbrout +'.cbz' )
 
 def CreateCBZ( cbzin ):
     '''function to create the zip file from the unrar'd'''
@@ -66,6 +71,7 @@ def CreateCBZ( cbzin ):
     # remove the archive directory
     shutil.rmtree( cbzin )
     zip.close()
+    print "Finished: " + os.path.basename( zip_file )
     return zip_file
 
 

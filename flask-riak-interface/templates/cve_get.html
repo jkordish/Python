@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>{{ id }}</title>
+</head>
+<body>
+<h1>{{id}}</h1>
+<ul id="navigation">
+    {% for item in cve %}
+            {% for k,v in item.items() %}
+            {{k+': '+v}}</br>
+            {% endfor %}
+    {% endfor %}
+    <br>
+    {% for each_link in data %}
+                {% set link = each_link.get() %}
+                    {% for item in link.get_data() %}
+                    {{ item }}</br>
+                    {% endfor %}
+        {% endfor %}
+</ul>
+{{ a_variable }}
+</body>
+</html>
